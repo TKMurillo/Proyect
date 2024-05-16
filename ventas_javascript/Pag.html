@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu de Facturación</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container" id="container">
+    <h1 class="menu-title" id="menuTitle">Menu de Facturación</h1>
+    <ul class="menu-options" id="menuPrincipal">
+      <li onclick="mostrarClientes()">Clientes</li>
+      <li onclick="mostrarProductos()">Productos</li>
+      <li onclick="mostrarVentas()">Ventas</li>
+      <li onclick="salir()">Salir</li>
+    </ul>
+  </div>
+
+  <div id="clienteMenu" style="display: none;">
+    <h2 class="sub-menu-title">Opciones de Cliente</h2>
+    <ul class="sub-menu-options">
+      <li onclick="mostrarFormularioIngresoCliente()">Ingresar Cliente</li>
+      <li onclick="mostrarFormularioActualizarCliente()">Actualizar Cliente</li>
+      <li onclick="mostrarFormularioConsultaCliente()">Consultar Cliente</li>
+      <li onclick="mostrarFormularioEliminarCliente()">Eliminar Cliente</li>
+      <li onclick="regresarMenuPrincipal()">Salir</li>
+    </ul>
+  </div>
+
+  <div id="clienteForm" style="display: none;">
+    <h2 class="sub-menu-title">Ingresar Cliente</h2>
+    <div class="input-group">
+      <label for="dni">DNI:</label>
+      <input type="text" id="dni" name="dni">
+    </div>
+    <div class="input-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre">
+    </div>
+    <div class="input-group">
+      <label for="apellido">Apellido:</label>
+      <input type="text" id="apellido" name="apellido">
+    </div>
+    <div class="input-group">
+      <label for="tipoCliente">Tipo de Cliente:</label>
+      <select id="tipoCliente" name="tipoCliente" onchange="mostrarOpciones()">
+        <option value="1">Regular</option>
+        <option value="2">VIP</option>
+      </select>
+    </div>
+    <div class="input-group" id="opcionesAdicionales" style="display: none;">
+      <!-- Aquí se mostrarán las opciones adicionales según el tipo de cliente -->
+    </div>
+    <div class="input-group" id="limiteCreditoDiv" style="display: none;">
+      <label for="limiteCredito">Límite de Crédito:</label>
+      <input type="number" id="limiteCredito" name="limiteCredito" min="10000" max="20000">
+    </div>
+    <div class="input-group">
+      <button onclick="validarYGuardarCliente()">Guardar</button> <!-- Aquí agregamos el evento onclick -->
+    </div>
+  </div>
+
+  <!-- Cambios realizados para agregar el apartado de consulta de cliente -->
+  <div id="consultaClienteForm" style="display: none;">
+    <h2 class="sub-menu-title">Consultar Cliente</h2>
+    <div class="input-group">
+      <label for="dniConsulta">DNI:</label>
+      <input type="text" id="dniConsulta" name="dniConsulta">
+      <button onclick="buscarClientePorDNI()">Buscar Cliente</button>
+    </div>
+    <div id="infoCliente" style="display: none;">
+      <!-- Aquí se mostrará la información del cliente -->
+    </div>
+    <!-- Agregamos el div para mostrar la lista de clientes -->
+    <div id="listaClientes"></div>
+  </div>
+  <div id="eliminarClienteForm" style="display: none;">
+    <h2 class="sub-menu-title">Eliminar Cliente</h2>
+    <div class="input-group">
+      <label for="dniEliminacion">DNI:</label>
+      <input type="text" id="dniEliminacion" name="dniEliminacion">
+      <button onclick="eliminarClientePorDNI()">Eliminar Cliente</button>
+    </div>
+    <div id="listaClientesEliminar" style="display: none;">
+    </div>
+  </div>
+  <div id="actualizarClienteForm" style="display: none;">
+    <h2 class="sub-menu-title">Actualizar Cliente</h2>
+    <div class="input-group">
+      <label for="dniActualizar">DNI:</label>
+      <input type="text" id="dniActualizar" name="dniActualizar">
+      <button onclick="buscarClienteParaActualizar()">Buscar Cliente</button>
+    </div>
+    <div id="formularioActualizacion" style="display: none;">
+      <div class="input-group" id="tieneTarjetaDiv">
+        <label for="tieneTarjetaActualizar">¿Tiene Tarjeta?</label>
+        <input type="checkbox" id="tieneTarjetaActualizar" name="tieneTarjetaActualizar" onchange="mostrarOpcionesAdicionales()">
+    </div>
+    </div>
+
+  <script src="Client.js"></script>
+  <script src="ConsulCli.js"></script>
+  <script src="EliminarCli.js"></script>
+  <script src="ActualizarCli.js"></script>
+  <script>
+    function mostrarClientes() {
+      document.getElementById('menuPrincipal').style.display = 'none';
+      document.getElementById('menuTitle').style.display = 'none';
+      document.getElementById('clienteMenu').style.display = 'block';
+    }
+
+    function mostrarFormularioActualizarCliente() {
+      document.getElementById('clienteMenu').style.display = 'none';
+      document.getElementById('actualizarClienteForm').style.display = 'block';
+    }
+
+    function mostrarFormularioIngresoCliente() {
+      document.getElementById('clienteMenu').style.display = 'none';
+      document.getElementById('clienteForm').style.display = 'block';
+    }
+
+    function mostrarFormularioConsultaCliente() {
+      document.getElementById('clienteMenu').style.display = 'none';
+      document.getElementById('consultaClienteForm').style.display = 'block';
+    }
+
+    function mostrarFormularioEliminarCliente() {
+      document.getElementById('clienteMenu').style.display = 'none';
+      document.getElementById('eliminarClienteForm').style.display = 'block';
+      mostrarListaClientesEliminar();
+    }
+
+    function regresarMenuPrincipal() {
+      document.getElementById('clienteMenu').style.display = 'none';
+      document.getElementById('menuPrincipal').style.display = 'block';
+      document.getElementById('menuTitle').style.display = 'block';
+    }
+    function limpiarPantallaYMostrarMenuCliente() {
+      limpiarPantalla();
+      regresarMenuCliente();
+      // Ocultar y limpiar el formulario de consulta de cliente
+      var formularioConsulta = document.getElementById('consultaClienteForm');
+      if (formularioConsulta) {
+          formularioConsulta.style.display = 'none';
+          // Limpiar el contenido del campo de DNI
+          document.getElementById('dniConsulta').value = '';
+      }
+    }
+  </script>
+</body>
+</html>
